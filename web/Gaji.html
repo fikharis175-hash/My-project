@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Penghitung Gaji Karyawan (Web)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input[type="text"], 
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Penting agar padding tidak melebarkan input */
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        #btnHitung {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #btnHapus {
+            background-color: #f44336;
+            color: white;
+        }
+        #hasilContainer {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            min-height: 150px;
+            font-size: 14px;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>💼 Aplikasi Penghitung Gaji Karyawan</h2>
+
+    <div class="input-group">
+        <label for="nama">Nama Karyawan:</label>
+        <input type="text" id="nama">
+    </div>
+
+    <div class="input-group">
+        <label for="jabatan">Jabatan:</label>
+        <input type="text" id="jabatan">
+    </div>
+    
+    <div class="input-group">
+        <label for="gaji">Gaji Pokok (Rp):</label>
+        <input type="number" id="gaji" value="0">
+    </div>
+    
+    <div class="input-group">
+        <label for="tunjangan">Tunjangan (Rp):</label>
+        <input type="number" id="tunjangan" value="0">
+    </div>
+    
+    <div class="input-group">
+        <label for="lembur">Lembur (Jam):</label>
+        <input type="number" id="lembur" value="0">
+    </div>
+    
+    <div class="input-group">
+        <label for="potongan">Potongan (Rp):</label>
+        <input type="number" id="potongan" value="0">
+    </div>
+
+    <div class="button-group">
+        <button id="btnHitung" onclick="hitungGaji()">Hitung Gaji</button>
+        <button id="btnHapus" onclick="hapusData()">Hapus</button>
+    </div>
+
+    <p style="font-weight: bold; margin-top: 20px;">Hasil Perhitungan:</p>
+    <div id="hasilContainer">
+        </div>
+</div>
+
+<script>
+    // Fungsi pembantu untuk format angka menjadi mata uang Rupiah
+    function formatRupiah(angka) {
+        return "Rp " + angka.toLocaleString('id-ID');
+    }
+
+    // Fungsi utama untuk menghitung gaji (Logika dari kode Python Anda)
+    function hitungGaji() {
+        const hasilContainer = document.getElementById('hasilContainer');
+        hasilContainer.innerHTML = ''; // Bersihkan hasil sebelumnya
+
+        try {
+            // 1. Ambil nilai input
+            const nama = document.getElementById('nama').value;
+            const jabatan = document.getElementById('jabatan').value;
+            const gaji_pokok = parseFloat(document.getElementById('gaji').value || 0);
+            const tunjangan = parseFloat(document.getElementById('tunjangan').value || 0);
+            const lembur = parseFloat(document.getElementById('lembur').value || 0);
+            const potongan = parseFloat(document.getElementById('potongan').value || 0);
+
+            // Cek jika ada input numerik yang tidak valid (NaN)
+            if (isNaN(gaji_pokok) || isNaN(tunjangan) || isNaN(lembur) || isNaN(potongan)) {
+                hasilContainer.innerHTML = '<div class="error">Pastikan semua input angka diisi dengan benar!</div>';
+                return;
+            }
+
+            // 2. Logika Perhitungan
+            const upah_lembur_per_jam = 20000; // Asumsi upah lembur per jam = 20.000
+            const upah_lembur = lembur * upah_lembur_per_jam;
+            const total_gaji = gaji_pokok + tunjangan + upah_lembur - potongan;
+
+            // 3. Tampilkan Hasil
+            const hasil = `
+Nama: ${nama || '-'}
+Jabatan: ${jabatan || '-'}
+Gaji Pokok: ${formatRupiah(gaji_pokok)}
+Tunjangan: ${formatRupiah(tunjangan)}
+Lembur (${lembur} jam): ${formatRupiah(upah_lembur)}
+Potongan: ${formatRupiah(potongan)}
+-----------------------------
+Gaji Bersih: ${formatRupiah(total_gaji)}
+            `;
+            hasilContainer.textContent = hasil.trim();
+
+        } catch (error) {
+            hasilContainer.innerHTML = '<div class="error">Terjadi kesalahan dalam perhitungan.</div>';
+            console.error(error);
+        }
+    }
+
+    // Fungsi untuk menghapus data
+    function hapusData() {
+        document.getElementById('nama').value = '';
+        document.getElementById('jabatan').value = '';
+        document.getElementById('gaji').value = '0';
+        document.getElementById('tunjangan').value = '0';
+        document.getElementById('lembur').value = '0';
+        document.getElementById('potongan').value = '0';
+        document.getElementById('hasilContainer').textContent = '';
+    }
+</script>
+
+</body>
+</html>
