@@ -5,7 +5,8 @@
     font-family:'Times New Roman', Times, serif;
 }
 
-body{
+body,
+html{
     background: rgb(239, 221, 221);
     width:100%;
     overflow-x: hidden;
