@@ -172,9 +172,10 @@ footer{
 }
 
 .projects-grid{
-    display: grid;
+    display: flex;
     gap: 10px;
-    grid-template-columns: 1fr 1fr 1fr;
+    justify-content:center;         /* 18-07-26*/
+    flex-wrap:wrap;                 /* Mengubah display grid menjadi flex. Menambahkan justify-content dan flex-wrap */
 }
 
 .projects-grid p{
