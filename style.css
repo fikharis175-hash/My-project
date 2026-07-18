@@ -267,7 +267,7 @@ footer{
 /* Responsif Website */
 
 /*--- CSS untuk layar handphone (Maksimal lebar 768px) ---*/
-@media (max-width: 768px){
+@media (max-width: 576px){
 
     /*mengubah navigasi agar menumpuk ke bawah */
     .center-container,
